@@ -1,6 +1,6 @@
 ﻿----------------------------------------------------------------------------------
  * Any feedback is appreciated.                                                 *
- * Please note that infomation is based on JP version.                          *
+ * Please note that information is based on JP version.                         *
 ----------------------------------------------------------------------------------
 ========================
  * Global Flag (Misc) *
@@ -22,7 +22,7 @@
 ====================
  * Player Status * 
 ====================
-  Base : 0x0AB590 (Physical Address)
+  Base : 0x0AB590 (Physical Address on Emulators)
   Size : 0x3C (Big Endian)
   *In fact, boss takes player 3 slot in Story mode.
 -------------------------------------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@
 	  loads position from a obj2 struct via obj2GetPos every single frame, thus directly modify it likely does no effect.
 ---------------------------------------------------------------------------------
 (2)
-  obj2 structure (P1 / Story Mode)
+  obj2 structure
     - A doubly linked list
 	- Contains information of current offset, scale(of base model), animation, etc.
 	struct size : 0xB0
