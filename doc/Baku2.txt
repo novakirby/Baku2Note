@@ -1,0 +1,167 @@
+﻿Please note that following data may only fit JP version.
+Last Update : 2018-02-07 (GMT)
+ 
+========================
+ * Global Flag (Misc) *
+========================
+  0x08FB30 : disable_hitchk
+    When lowest bit of this word is set, all objects ignore collision(eg. walls, doors, hitbox, etc.), may used to debug.
+ 
+==========================
+ * Movement Calculation *
+==========================
+  Speed = min( sqrt(stuff), 12.0) * multiplier, in which:
+      multiplier :            stuff :
+         LV0 : 0.6                Something related to controller input/status
+         LV1 : 0.8
+         LV2 : 1.0
+         LV3 : 1.2
+  Pommy(ポミュ)'s movement is always calculated as LV0    
+ 
+====================
+ * Player Status *
+====================
+  Base : 0x0AB590 (Physical Address)
+  Size : 0x3C (Big Endian)
+  *In fact, boss takes player 3 slot in Story mode.
+-------------------------------------------------------------------------------------------------------------------
+ Offset| Discription
+-------------------------------------------------------------------------------------------------------------------
+  0x00 | (DWord) Bomb(爆弾数) [0x0AB590]
+       |   Display value for bomb count on UI.
+  0x04 | (DWord) Fire(火力) [0x0AB594]
+  0x08 | (DWord) Bomb type(爆弾属性) [0x0AB598]
+       |   Modify this directly will makes graphic glicthy since the texture does not loaded correctly.
+       |   Invalid value freezes the game when bomb spwan.
+       |   Buggy in battle mode, freeze the game easily due to overflow or some other error.
+  0x0C | (DWord) Speed(スピード) [0x0AB59C]
+       |   LV3 is unused, works fine. Invalid values will have multiplier 1.0.
+  0x10 | (Byte) ? [0x0AB5A0]
+  0x11 | (Byte) ? [0x0AB5A1]
+       |     Bit | Discription
+       |      0  | unused / unknown
+       |      1  | unused / unknown
+       |      2  | unused / unknown
+       |      3  | unused / unknown
+       |      4  | unused / unknown
+       |      5  | unused / unknown
+       |      6  | unused / unknown
+       |      7  | Asserted when not active (eg. Title screen)
+  0x12 | (Byte) Ability [0x0AB5A2]
+       |     Bit | Discription
+       |      0  | Kick(キック)
+       |      1  | Throw(投げ)
+       |      2  | Remote(リモコン)
+       |      3  | unused / unknown
+       |      4  | unused / unknown
+       |      5  | unused / unknown
+       |      6  | unused / unknown
+       |      7  | unused / unknown
+  0x13 | (Byte) Event Status [0x0AB5A3]
+       |      Bit | Discription
+       |      0  | unused / unknown
+       |      1  | Event Invincible(*1)
+       |      2  | unused / unknown
+       |      3  | unused / unknown
+       |      4  | unused / unknown
+       |      5  | unused / unknown
+       |      6  | unused / unknown
+       |      7  | unused / unknown
+       |     -----------------
+       |      Additional Note
+       |     -----------------
+       |   (*1) The game asserts bit 2 when map events triggered. If bit 2 is asserted, player will:
+       |        1. Not affect by hitbox.
+       |        2. Affect normally by Wind bomb(風ボム).
+       |        3. Not affect by Dark bomb(闇ボム).
+       |        4. Not affect by danger zone. Water(水)/Magma(マグマ) zone makes player "sink" slowly until button of zone.
+       |        5. Not affect by instant-kill(即死) move from boss; Scripts and effects still work as if move connected, but player can
+       |           move freely. Boss will stuck on finish motion, any hitbox can make them return to idle/damage state.
+       |        and thus makes gameover not possible. Probably intended to prevent unexcepted behavior during events and debug test.
+  0x14 |  ? [0x0AB5A4 - 0x0AB5B7]
+  0x28 |  (DWord) Bomb(Limit)(爆弾数(上限)) [0x0AB5B8]
+       |   Maximum number allowed for bomb exist in world. It seems that the value is calculated each time when bomb type changed.
+       |     Fire(炎)   : Bomb + 1
+       |     Ice(氷)    : Bomb
+       |     Wind(風)   : Bomb
+       |     Elec(雷)   : Bomb + 1
+       |     Ground(土) : 1
+       |     Light(光)  : 1
+       |     Dark(闇)   : 1
+       |   Too many bombs explode at once would cause the game hangs up due to overflow.
+  0x2C |  (DWord) Health(Current) (ハート) [0x0AB5BC]
+  0x30 |  (DWord) : Health(Maximum) (ハート上限) [0x0AB5C0]
+       |   Gameover is triggered in story mode if player 1 has health less or equal than 0 after damage calculation.
+       |   Pommy can not dies by health 0.
+       |   Too many heart icon on UI will make the game hangs up when switching area.
+  0x34 |  (DWord) : Special Status (状態) [0x0AB5C4]
+       |   Next special status register when skull(ドクロ) or invincible(無敵) touched.
+       |     0x0 : None
+       |     0x1 : Tiny(リトル)
+       |     0x2 : Big(ビッグ)
+       |     0x3 : Disarmed(ハムスター)
+       |     0x4 : Reverse(リバース)
+       |     0x5 : Disguise(フェイクボム)
+       |     0x6 : Fire(ファイアーマン)
+       |     0x7 : Invisible(クリア)
+       |     0x8 : Phantom(死神)
+       |     0x9 : Fuzzy(ブラインド)
+       |     0xA : Invincible(無敵) (*1)
+       |     -----------------
+       |      Additional Note
+       |     -----------------
+       |     (*1) This invincible only blocks damage hitboxs.
+  0x38 |  0x0AB5C8 - 0x0AB5CC : ?
+ 
+=================
+ * In Research *
+=================
+(1)
+  Addr : [0x0D0BB0] (P1 / Story Mode)
+    - Destination of subroutine called "obj2GetPos" and source of subroutine called "obj2SetPos".
+    - Offset 0x0 is the pointer (virtual address) to obj2, which located in heap segment, dynamically changes by time.
+    - Offset 0x4, 0x8, 0xC are X, Y, Z Position of object, respectively, using IEEE 754 single precision. As mentioned, the game system
+      loads position from a obj2 struct via obj2GetPos every single frame, thus directly modify it likely does no effect.
+---------------------------------------------------------------------------------
+(2)
+  obj2 structure (P1 / Story Mode)
+    - A doubly linked list
+    - Contains information of current offset, scale(of base model), animation, etc.
+    struct size : 0xB0
+  -------------------------------------------------------------------------------------------------------------------
+   Offset| Discription
+  -------------------------------------------------------------------------------------------------------------------
+    0x00 | (DWord) Next
+    0x04 | (DWord) Prev
+    0x08 | (DWord) X Offset
+    0x0C | (DWord) Y Offset
+    0x10 | (DWord) Z Offset
+    0x14 | (DWord) X Rot (probably stands for "rotation")
+    0x18 | (DWord) Y Rot
+    0x1C | (DWord) Z Rot
+    0x20 | (DWord) X Scale
+    0x24 | (DWord) Y Scale
+    0x28 | (DWord) Z Scale
+    0x2C | (DWord)
+    0x30 | (HWord)
+    0x32 | (HWord) Sort Key
+    0x34 | (HWord)
+    0x36 | (HWord)
+    0x38 | (HWord) Status Flag
+    0x3A | (HWord) Animation Flag
+    (WIP)
+=============
+ * Summary *
+=============
+  Gameshark code (example code):
+    God Mode (Player 1)
+      800AB593 0003 //Bomb
+      800AB597 0003 //Fire
+      800AB59F 0003 //Speed
+      810AB5A2 0407 //Flags
+      800AB5BB 000A //Bomb(Limit)
+      800AB5BF 000C //Health(Current)
+      800AB5C3 000C //Health(Max)
+  -----------------------------------------------
+  (reserved)
+  -----------------------------------------------
