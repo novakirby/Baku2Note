@@ -1,14 +1,15 @@
-﻿Please note that following data may only fit JP version.
-Last Update : 2018-02-07 (GMT)
- 
+﻿----------------------------------------------------------------------------------
+ * Any feedback is appreciated.                                                 *
+ * Please note that infomation is based on JP version.                          *
+----------------------------------------------------------------------------------
 ========================
  * Global Flag (Misc) *
 ========================
   0x08FB30 : disable_hitchk
-    When lowest bit of this word is set, all objects ignore collision(eg. walls, doors, hitbox, etc.), may used to debug.
- 
+	When lowest bit of this word is set, all objects ignore collision(eg. walls, doors, hitbox, etc.), may used to debug.
+
 ==========================
- * Movement Calculation *
+ * Movement Calculation * 
 ==========================
   Speed = min( sqrt(stuff), 12.0) * multiplier, in which:
       multiplier :            stuff :
@@ -16,10 +17,10 @@ Last Update : 2018-02-07 (GMT)
          LV1 : 0.8
          LV2 : 1.0
          LV3 : 1.2
-  Pommy(ポミュ)'s movement is always calculated as LV0    
- 
+  Pommy(ポミュ)'s movement is always calculated as LV0     
+
 ====================
- * Player Status *
+ * Player Status * 
 ====================
   Base : 0x0AB590 (Physical Address)
   Size : 0x3C (Big Endian)
@@ -75,7 +76,7 @@ Last Update : 2018-02-07 (GMT)
        |        2. Affect normally by Wind bomb(風ボム).
        |        3. Not affect by Dark bomb(闇ボム).
        |        4. Not affect by danger zone. Water(水)/Magma(マグマ) zone makes player "sink" slowly until button of zone.
-       |        5. Not affect by instant-kill(即死) move from boss; Scripts and effects still work as if move connected, but player can
+       |        5. Not affect by instant-kill(即死) move from boss; Scripts and effects still work as if move connected, but player can 
        |           move freely. Boss will stuck on finish motion, any hitbox can make them return to idle/damage state.
        |        and thus makes gameover not possible. Probably intended to prevent unexcepted behavior during events and debug test.
   0x14 |  ? [0x0AB5A4 - 0x0AB5B7]
@@ -112,44 +113,44 @@ Last Update : 2018-02-07 (GMT)
        |     -----------------
        |     (*1) This invincible only blocks damage hitboxs.
   0x38 |  0x0AB5C8 - 0x0AB5CC : ?
- 
+
 =================
  * In Research *
 =================
 (1)
   Addr : [0x0D0BB0] (P1 / Story Mode)
-    - Destination of subroutine called "obj2GetPos" and source of subroutine called "obj2SetPos".
-    - Offset 0x0 is the pointer (virtual address) to obj2, which located in heap segment, dynamically changes by time.
-    - Offset 0x4, 0x8, 0xC are X, Y, Z Position of object, respectively, using IEEE 754 single precision. As mentioned, the game system
-      loads position from a obj2 struct via obj2GetPos every single frame, thus directly modify it likely does no effect.
+	- Destination of subroutine called "obj2GetPos" and source of subroutine called "obj2SetPos".
+	- Offset 0x0 is the pointer (virtual address) to obj2, which located in heap segment, dynamically changes by time.
+	- Offset 0x4, 0x8, 0xC are X, Y, Z Position of object, respectively, using IEEE 754 single precision. As mentioned, the game system
+	  loads position from a obj2 struct via obj2GetPos every single frame, thus directly modify it likely does no effect.
 ---------------------------------------------------------------------------------
 (2)
   obj2 structure (P1 / Story Mode)
     - A doubly linked list
-    - Contains information of current offset, scale(of base model), animation, etc.
-    struct size : 0xB0
+	- Contains information of current offset, scale(of base model), animation, etc.
+	struct size : 0xB0
   -------------------------------------------------------------------------------------------------------------------
    Offset| Discription
   -------------------------------------------------------------------------------------------------------------------
     0x00 | (DWord) Next
     0x04 | (DWord) Prev
-    0x08 | (DWord) X Offset
-    0x0C | (DWord) Y Offset
-    0x10 | (DWord) Z Offset
+	0x08 | (DWord) X Offset
+	0x0C | (DWord) Y Offset
+	0x10 | (DWord) Z Offset
     0x14 | (DWord) X Rot (probably stands for "rotation")
-    0x18 | (DWord) Y Rot
-    0x1C | (DWord) Z Rot
-    0x20 | (DWord) X Scale
+	0x18 | (DWord) Y Rot
+	0x1C | (DWord) Z Rot
+	0x20 | (DWord) X Scale
     0x24 | (DWord) Y Scale
-    0x28 | (DWord) Z Scale
-    0x2C | (DWord)
-    0x30 | (HWord)
-    0x32 | (HWord) Sort Key
-    0x34 | (HWord)
-    0x36 | (HWord)
-    0x38 | (HWord) Status Flag
-    0x3A | (HWord) Animation Flag
-    (WIP)
+	0x28 | (DWord) Z Scale
+	0x2C | (DWord) 
+	0x30 | (HWord) 
+	0x32 | (HWord) Sort Key
+    0x34 | (HWord) 
+	0x36 | (HWord) 
+	0x38 | (HWord) Status Flag
+	0x3A | (HWord) Animation Flag
+	(WIP)
 =============
  * Summary *
 =============
