@@ -49,7 +49,7 @@
        |      6  | unused / unknown
        |      7  | Asserted when not active (eg. Title screen)
   0x12 | (Byte) Event Status [0x0AB5A2]
-       |      Bit | Discription
+       |     Bit | Discription
        |      0  | unused / unknown
        |      1  | unused / unknown
        |      2  | Event Invincible(*1)
@@ -127,34 +127,56 @@
 (2)
   obj2 structure
     - A doubly linked list
-	- Contains information of current offset, scale(of base model), animation, etc.
-	struct size : 0xB0
+	- Contains information of current model.
+	struct size : 0xE8
   -------------------------------------------------------------------------------------------------------------------
    Offset| Discription
   -------------------------------------------------------------------------------------------------------------------
     0x00 | (DWord) Next
     0x04 | (DWord) Prev
-	0x08 | (DWord) X Offset
-	0x0C | (DWord) Y Offset
-	0x10 | (DWord) Z Offset
+    0x08 | (DWord) X Offset
+    0x0C | (DWord) Y Offset
+    0x10 | (DWord) Z Offset
     0x14 | (DWord) X Rot (probably stands for "rotation")
-	0x18 | (DWord) Y Rot
-	0x1C | (DWord) Z Rot
-	0x20 | (DWord) X Scale
+    0x18 | (DWord) Y Rot
+    0x1C | (DWord) Z Rot
+    0x20 | (DWord) X Scale
     0x24 | (DWord) Y Scale
-	0x28 | (DWord) Z Scale
-	0x2C | (DWord) 
-	0x30 | (HWord) 
-	0x32 | (HWord) Sort Key
-    0x34 | (HWord) 
-	0x36 | (HWord) 
-	0x38 | (HWord) Status Flag
-	0x3A | (HWord) Animation Flag
-	(WIP)
-=============
- * Summary *
-=============
-  Gameshark code (example code):
+    0x28 | (DWord) Z Scale
+    0x2C | (DWord) 
+    0x30 | (HWord) 
+    0x32 | (HWord) Sort Key
+    0x34 | (HWord) Status ID
+    0x36 | (HWord) 
+    0x38 | (HWord) Rendering Flag
+         |      Bit | Discription
+         |       0  |  unknown
+         |       1  |  unknown
+         |       2  |  unknown
+         |       3  |  unknown
+         |       4  |  unknown
+         |       5  |  unknown
+         |       6  |  unknown
+         |       7  |  Reset Model?
+         |       8  |  unknown
+         |       9  |  unknown
+         |       A  |  unknown
+         |       B  |  unknown
+         |       C  |  unknown
+         |       D  |  Blinking
+         |       E  |  Visability
+         |       F  |  unknown
+    0x3A | (HWord) Black-listed animID? (Stored by bit-flag)
+    0x50 | (Byte) Color R?
+    0x51 | (Byte) Color G?
+    0x52 | (Byte) Color B?
+    0x53 | (Byte) Color A
+    0xDC | (DWord) Function Parameter
+
+===================
+ * Example codes *
+===================
+  Gameshark:
     God Mode (Player 1)
       800AB593 0003 //Bomb
       800AB597 0003 //Fire
